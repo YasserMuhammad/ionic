@@ -67,7 +67,6 @@
 }
 
 .toolbar-translucent-ios .toolbar-background-ios {
-  -webkit-backdrop-filter: $toolbar-ios-translucent-filter;
   backdrop-filter: $toolbar-ios-translucent-filter;
 }
 
@@ -122,11 +121,19 @@
 // --------------------------------------------------
 
 .bar-buttons-ios {
-  @include text-align(start);
-
-  order: map-get($toolbar-order-ios, buttons-start);
+  order: map-get($toolbar-order-ios, buttons-secondary);
 
   transform: translateZ(0);
+}
+
+.bar-buttons-ios[slot="start"] {
+  order: map-get($toolbar-order-ios, buttons-start);
+}
+
+.bar-buttons-ios[slot="primary"] {
+  @include text-align(end);
+
+  order: map-get($toolbar-order-ios, buttons-primary);
 }
 
 .bar-buttons-ios[slot="end"] {
@@ -134,6 +141,7 @@
 
   order: map-get($toolbar-order-ios, buttons-end);
 }
+
 
 
 // iOS Toolbar Button Default
@@ -305,11 +313,6 @@
 
     font-size: 28px;
   }
-}
-
-.bar-button-menutoggle-ios[slot="mode-end"],
-.bar-button-menutoggle-ios[slot="end"] {
-  order: map-get($toolbar-order-ios, menu-toggle-end);
 }
 
 

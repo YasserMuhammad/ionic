@@ -237,7 +237,7 @@ export class MenuController {
     }
     if (shouldOpen) {
       const openedMenu = this.getOpen();
-      if (openedMenu && menu !== openedMenu) {
+      if (openedMenu && menu.el !== openedMenu) {
         openedMenu.setOpen(false, false);
       }
     }
@@ -256,7 +256,8 @@ export class MenuController {
     return this.animationCtrl.create(animationBuilder, null, menuCmp);
   }
 
-  private registerAnimation(name: string, animation: AnimationBuilder) {
+  @Method()
+  registerAnimation(name: string, animation: AnimationBuilder) {
     this.menuAnimations.set(name, animation);
   }
 

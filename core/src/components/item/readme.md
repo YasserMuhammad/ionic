@@ -31,6 +31,11 @@ boolean
 If true, the user cannot interact with the item. Defaults to `false`.
 
 
+#### goBack
+
+boolean
+
+
 #### href
 
 string
@@ -46,14 +51,6 @@ If this property is set, an anchor tag will be rendered.
 The mode determines which platform styles to use.
 Possible values are: `"ios"` or `"md"`.
 For more information, see [Platform Styles](/docs/theming/platform-specific-styles).
-
-
-#### onclick
-
-
-
-Callback function.
-If this property is set, a button tag will be rendered.
 
 
 #### tappable
@@ -90,6 +87,11 @@ boolean
 If true, the user cannot interact with the item. Defaults to `false`.
 
 
+#### go-back
+
+boolean
+
+
 #### href
 
 string
@@ -105,14 +107,6 @@ If this property is set, an anchor tag will be rendered.
 The mode determines which platform styles to use.
 Possible values are: `"ios"` or `"md"`.
 For more information, see [Platform Styles](/docs/theming/platform-specific-styles).
-
-
-#### onclick
-
-
-
-Callback function.
-If this property is set, a button tag will be rendered.
 
 
 #### tappable

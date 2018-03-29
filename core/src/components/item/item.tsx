@@ -49,16 +49,13 @@ export class Item {
   @Prop() href: string;
 
   /**
-   * Callback function.
-   * If this property is set, a button tag will be rendered.
-   */
-  @Prop() onclick: (this: HTMLElement, ev: MouseEvent) => any;
-
-  /**
    * Whether or not this item should be tappable.
    * If true, a button tag will be rendered. Defaults to `false`.
    */
   @Prop() tappable = false;
+
+  @Prop() goBack = false;
+
 
   @Listen('ionStyle')
   itemStyle(ev: UIEvent) {
@@ -102,7 +99,7 @@ export class Item {
       childStyles = Object.assign(childStyles, this.itemStyles[key]);
     }
 
-    const clickable = !!(this.href || this.onclick || this.tappable);
+    const clickable = !!(this.href || this.el.onclick || this.tappable);
 
     const TagType = clickable
       ? this.href ? 'a' : 'button'
@@ -128,7 +125,7 @@ export class Item {
       <TagType
         {...attrs}
         class={themedClasses}
-        onClick={(ev) => openURL(this.href, ev)}>
+        onClick={(ev) => openURL(this.href, ev, this.goBack)}>
         <slot name='start'></slot>
         <div class='item-inner'>
           <div class='input-wrapper'>
@@ -136,7 +133,7 @@ export class Item {
           </div>
           <slot name='end'></slot>
         </div>
-        { clickable && this.mode === 'md' && <ion-ripple-effect/> }
+        { clickable && this.mode === 'md' && <ion-ripple-effect useTapClick={true}/> }
       </TagType>
     );
   }

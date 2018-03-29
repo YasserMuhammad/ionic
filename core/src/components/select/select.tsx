@@ -3,9 +3,9 @@ import { CssClassMap } from '../../index';
 import { HTMLIonSelectOptionElementEvent } from '../select-option/select-option';
 import { BlurEvent, FocusEvent, SelectInputChangeEvent, StyleEvent } from '../../utils/input-interfaces';
 
-import { ActionSheet, ActionSheetButton, ActionSheetOptions  } from '../action-sheet/action-sheet';
-import { Alert, AlertOptions } from '../alert/alert';
-import { Popover, PopoverOptions } from '../popover/popover';
+import { ActionSheetButton, ActionSheetOptions  } from '../action-sheet/action-sheet';
+import { AlertOptions } from '../alert/alert';
+import { PopoverOptions } from '../popover/popover';
 
 import { ActionSheetController } from '../action-sheet-controller/action-sheet-controller';
 import { AlertController } from '../alert-controller/alert-controller';
@@ -24,10 +24,11 @@ import { SelectPopoverOption } from '../select-popover/select-popover';
   }
 })
 export class Select {
+
   private childOpts: HTMLIonSelectOptionElement[] = [];
   private selectId: string;
   private labelId: string;
-  private overlay: ActionSheet | Alert | Popover | null;
+  private overlay: HTMLIonActionSheetElement | HTMLIonAlertElement | HTMLIonPopoverElement | undefined;
   private styleTmr: any;
   private mode: string;
 
@@ -272,7 +273,7 @@ export class Select {
     this.emitStyle();
   }
 
-  getLabel() {
+  private getLabel() {
     const item = this.el.closest('ion-item');
     if (item) {
       return item.querySelector('ion-label');
@@ -280,7 +281,7 @@ export class Select {
     return null;
   }
 
-  open(ev: UIEvent) {
+  private open(ev: UIEvent) {
     let selectInterface = this.interface;
 
     if ((selectInterface === 'action-sheet' || selectInterface === 'popover') && this.multiple) {
@@ -304,7 +305,7 @@ export class Select {
     return this.openAlert();
   }
 
-  openPopover(ev: UIEvent) {
+  private async openPopover(ev: UIEvent) {
     const interfaceOptions = {...this.interfaceOptions};
 
     const popoverOpts: PopoverOptions = Object.assign(interfaceOptions, {
@@ -331,19 +332,13 @@ export class Select {
       ev: ev
     });
 
-    const popover = this.popoverCtrl.create(popoverOpts);
-
-    return popover.then(overlay => {
-      this.overlay = overlay;
-
-      return overlay.present().then(() => {
-        this.isExpanded = true;
-        return overlay;
-      });
-    });
+    const popover = this.overlay = await this.popoverCtrl.create(popoverOpts);
+    await popover.present();
+    this.isExpanded = true;
+    return popover;
   }
 
-  openActionSheet() {
+  private async openActionSheet() {
     const interfaceOptions = {...this.interfaceOptions};
 
     const actionSheetButtons = this.childOpts.map(option => {
@@ -369,17 +364,14 @@ export class Select {
       cssClass: 'select-action-sheet' + (interfaceOptions.cssClass ? ' ' + interfaceOptions.cssClass : '')
     });
 
-    const actionSheet = this.actionSheetCtrl.create(actionSheetOpts);
-    return actionSheet.then(overlay => {
-      this.overlay = overlay;
-      return overlay.present().then(() => {
-        this.isExpanded = true;
-        return overlay;
-      });
-    });
+    const actionSheet = this.overlay = await this.actionSheetCtrl.create(actionSheetOpts);
+    await actionSheet.present();
+
+    this.isExpanded = true;
+    return actionSheet;
   }
 
-  openAlert() {
+  private async openAlert() {
     const interfaceOptions = {...this.interfaceOptions};
 
     const label = this.getLabel();
@@ -416,27 +408,24 @@ export class Select {
                 (interfaceOptions.cssClass ? ' ' + interfaceOptions.cssClass : '')
     });
 
-    const alert = this.alertCtrl.create(alertOpts);
-    return alert.then(overlay => {
-      this.overlay = overlay;
-      return overlay.present().then(() => {
-        this.isExpanded = true;
-        return overlay;
-      });
-    });
+    const alert = this.overlay = await this.alertCtrl.create(alertOpts);
+    await alert.present();
+
+    this.isExpanded = true;
+    return alert;
   }
 
   /**
    * Close the select interface.
    */
-  close(): Promise<any> | void {
+  private close(): Promise<void> {
     // TODO check !this.overlay || !this.isFocus()
     if (!this.overlay) {
       return Promise.resolve();
     }
 
     const overlay = this.overlay;
-    this.overlay = null;
+    this.overlay = undefined;
 
     this.isExpanded = false;
 
@@ -463,7 +452,7 @@ export class Select {
     return (this.value !== null && this.value !== undefined && this.value !== '');
   }
 
-  emitStyle() {
+  private emitStyle() {
     clearTimeout(this.styleTmr);
 
     this.styleTmr = setTimeout(() => {
@@ -520,7 +509,7 @@ export class Select {
         onBlur={this.onBlur.bind(this)}
         class='select-cover'>
         <slot></slot>
-        {this.mode === 'md' ? <ion-ripple-effect /> : null}
+        {this.mode === 'md' && <ion-ripple-effect useTapClick={true}/>}
       </button>,
       <input type='hidden' name={this.name} value={this.value}/>
     ];

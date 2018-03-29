@@ -117,11 +117,21 @@
 // --------------------------------------------------
 
 .bar-buttons-md {
-  @include text-align(start);
+  @include margin(0, 2px);
 
-  order: map-get($toolbar-order-md, buttons-start);
+  order: map-get($toolbar-order-md, buttons-secondary);
 
   transform: translateZ(0);
+}
+
+.bar-buttons-md[slot="start"] {
+  order: map-get($toolbar-order-md, buttons-start);
+}
+
+.bar-buttons-md[slot="primary"] {
+  @include text-align(end);
+
+  order: map-get($toolbar-order-md, buttons-primary);
 }
 
 .bar-buttons-md[slot="end"] {
@@ -135,7 +145,6 @@
 // --------------------------------------------------
 
 .bar-button-md {
-  @include margin(0, 2px, 0, 2px);
   @include padding(0, 5px);
   @include border-radius($toolbar-md-button-border-radius);
 
@@ -263,7 +272,6 @@
   @include padding-horizontal(null, .3em);
 
   font-size: 1.4em;
-  line-height: .67;
 
   pointer-events: none;
 }
@@ -272,7 +280,6 @@
   @include padding-horizontal(.4em, null);
 
   font-size: 1.4em;
-  line-height: .67;
 
   pointer-events: none;
 }
@@ -280,10 +287,7 @@
 .bar-button-md ion-icon[slot="icon-only"] {
   @include padding(0);
 
-  min-width: 28px;
-
   font-size: 1.8em;
-  line-height: .67;
 
   pointer-events: none;
 }
@@ -293,7 +297,6 @@
 // --------------------------------------------------
 
 .bar-button-menutoggle-md {
-  @include margin(0, 6px);
   @include padding(0, 2px);
 
   order: map-get($toolbar-order-md, menu-toggle-start);
@@ -305,15 +308,6 @@
   @include padding(0, 6px);
 
   font-size: 24px;
-}
-
-.bar-button-menutoggle-md[slot="mode-end"],
-.bar-button-menutoggle-md[slot="end"] {
-  @include margin(0, 2px);
-
-  order: map-get($toolbar-order-md, menu-toggle-end);
-
-  min-width: 28px;
 }
 
 
